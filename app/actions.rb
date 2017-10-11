@@ -75,13 +75,6 @@ post '/posts' do
     erb(:"posts/new")
     end
  
-
-
-
-    
-    
-
-
 end
  
  
@@ -89,3 +82,30 @@ get '/posts/:id' do
     @post = Post.find(params[:id])      # find the post with the ID from the URL
     erb(:"posts/show")                  # render app/views/posts/show.erb
 end
+
+post '/comments' do
+    text = params[:text]
+    post_id = params[:post_id]
+    
+    comment = Comment.new({ text: text, post_id: post_id, user_id: current_user.id })
+    
+    comment.save
+    
+    redirect(back)
+end
+
+post '/likes' do
+  post_id = params[:post_id]
+
+  like = Like.new({ post_id: post_id, user_id: current_user.id })
+  like.save
+
+  redirect(back)
+end
+
+delete '/likes/:id' do
+    like = Like.find(params[:id])
+    like.destroy
+    redirect(back)
+end
+
